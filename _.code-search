@@ -1,0 +1,223 @@
+# Query: \n
+# ContextLines: 1
+
+191 results - 9 files
+
+app.js:
+   1: const createError = require('http-errors');
+   2: const express = require('express');
+   3: const path = require('path');
+   4: const cookieParser = require('cookie-parser');
+   5: const logger = require('morgan');
+   6: 
+   7: const indexRouter = require('./routes/index');
+   8: const usersRouter = require('./routes/users');
+   9: 
+  10: const app = express();
+  11: 
+  12: // view engine setup
+  13: app.set('views', path.join(__dirname, 'views'));
+  14: app.set('view engine', 'jade');
+  15: 
+  16: app.use(logger('dev'));
+  17: app.use(express.json());
+  18: app.use(express.urlencoded({ extended: false }));
+  19: app.use(cookieParser());
+  20: app.use(express.static(path.join(__dirname, 'public')));
+  21: 
+  22: app.use('/', indexRouter);
+  23: app.use('/users', usersRouter);
+
+  24: 
+  25: // catch 404 and forward to error handler
+  26: app.use(function(req, res, next) {
+  27:   next(createError(404));
+  28: });
+  29: 
+  30: // error handler
+  31: app.use(function(err, req, res, next) {
+  32:   // set locals, only providing error in development
+  33:   res.locals.message = err.message;
+  34:   res.locals.error = req.app.get('env') === 'development' ? err : {};
+  35: 
+  36:   // render the error page
+  37:   res.status(err.status || 500);
+  38:   res.render('error');
+  39: });
+  40: 
+  41: module.exports = app;
+  42: 
+
+package.json:
+   1: {
+   2:   "name": "express-locallibrary-tutorial",
+   3:   "version": "0.0.0",
+   4:   "private": true,
+   5:   "scripts": {
+   6:     "start": "node ./bin/www"
+   7:   },
+   8:   "dependencies": {
+   9:     "cookie-parser": "~1.4.4",
+  10:     "debug": "~2.6.9",
+  11:     "express": "~4.16.1",
+  12:     "http-errors": "~1.6.3",
+  13:     "jade": "~1.11.0",
+  14:     "morgan": "~1.9.1"
+  15:   }
+  16: }
+  17: 
+
+bin\www:
+   1: #!/usr/bin/env node
+   2: 
+   3: /**
+   4:  * Module dependencies.
+   5:  */
+   6: 
+   7: const app = require('../app');
+   8: const debug = require('debug')('express-locallibrary-tutorial:server');
+   9: const http = require('http');
+  10: 
+  11: /**
+  12:  * Get port from environment and store in Express.
+  13:  */
+  14: 
+  15: const port = normalizePort(process.env.PORT || '3000');
+  16: app.set('port', port);
+  17: 
+  18: /**
+  19:  * Create HTTP server.
+  20:  */
+  21: 
+  22: const server = http.createServer(app);
+  23: 
+  24: /**
+  25:  * Listen on provided port, on all network interfaces.
+  26:  */
+  27: 
+  28: server.listen(port);
+  29: server.on('error', onError);
+  30: server.on('listening', onListening);
+  31: 
+  32: /**
+  33:  * Normalize a port into a number, string, or false.
+  34:  */
+  35: 
+  36: function normalizePort(val) {
+  37:   const port = parseInt(val, 10);
+  38: 
+  39:   if (isNaN(port)) {
+  40:     // named pipe
+  41:     return val;
+  42:   }
+  43: 
+  44:   if (port >= 0) {
+  45:     // port number
+  46:     return port;
+  47:   }
+  48: 
+  49:   return false;
+  50: }
+  51: 
+  52: /**
+  53:  * Event listener for HTTP server "error" event.
+  54:  */
+  55: 
+  56: function onError(error) {
+  57:   if (error.syscall !== 'listen') {
+  58:     throw error;
+  59:   }
+  60: 
+  61:   const bind = typeof port === 'string'
+  62:     ? 'Pipe ' + port
+  63:     : 'Port ' + port;
+  64: 
+  65:   // handle specific listen errors with friendly messages
+  66:   switch (error.code) {
+  67:     case 'EACCES':
+  68:       console.error(bind + ' requires elevated privileges');
+  69:       process.exit(1);
+  70:       break;
+  71:     case 'EADDRINUSE':
+  72:       console.error(bind + ' is already in use');
+  73:       process.exit(1);
+  74:       break;
+  75:     default:
+  76:       throw error;
+  77:   }
+  78: }
+  79: 
+  80: /**
+  81:  * Event listener for HTTP server "listening" event.
+  82:  */
+  83: 
+  84: function onListening() {
+  85:   const addr = server.address();
+  86:   const bind = typeof addr === 'string'
+  87:     ? 'pipe ' + addr
+  88:     : 'port ' + addr.port;
+  89:   debug('Listening on ' + bind);
+  90: }
+  91: 
+
+public\stylesheets\style.css:
+  1: body {
+  2:   padding: 50px;
+  3:   font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+  4: }
+  5: 
+  6: a {
+  7:   color: #00B7FF;
+  8: }
+  9: 
+
+routes\index.js:
+   1: const express = require('express');
+   2: const router = express.Router();
+   3: 
+   4: /* GET home page. */
+   5: router.get('/', function(req, res, next) {
+   6:   res.render('index', { title: 'Express' });
+   7: });
+   8: 
+   9: module.exports = router;
+  10: 
+
+routes\users.js:
+   1: const express = require('express');
+   2: const router = express.Router();
+   3: 
+   4: /* GET users listing. */
+   5: router.get('/', function(req, res, next) {
+   6:   res.send('respond with a resource');
+   7: });
+   8: 
+   9: module.exports = router;
+  10: 
+
+views\error.jade:
+  1: extends layout
+  2: 
+  3: block content
+  4:   h1= message
+  5:   h2= error.status
+  6:   pre #{error.stack}
+  7: 
+
+views\index.jade:
+  1: extends layout
+  2: 
+  3: block content
+  4:   h1= title
+  5:   p Welcome to #{title}
+  6: 
+
+views\layout.jade:
+  1: doctype html
+  2: html
+  3:   head
+  4:     title= title
+  5:     link(rel='stylesheet', href='/stylesheets/style.css')
+  6:   body
+  7:     block content
+  8: 
